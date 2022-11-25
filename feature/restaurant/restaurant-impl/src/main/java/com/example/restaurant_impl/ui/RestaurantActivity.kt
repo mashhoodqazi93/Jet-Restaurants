@@ -22,7 +22,7 @@ class RestaurantActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    Greeting("Mashhood")
                 }
             }
         }
@@ -31,7 +31,7 @@ class RestaurantActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    Text(text = "Hello, This is $name's Restaurant. What's the code word?")
 }
 
 @Preview(showBackground = true)
