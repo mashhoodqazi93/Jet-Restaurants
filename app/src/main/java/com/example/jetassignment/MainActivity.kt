@@ -20,16 +20,3 @@ class MainActivity : ComponentActivity() {
         startActivity(Intent(this, RestaurantActivity::class.java))
     }
 }
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JetAssignmentTheme {
-        Greeting("Android")
-    }
-}

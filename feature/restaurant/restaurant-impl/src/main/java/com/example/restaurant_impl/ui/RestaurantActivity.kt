@@ -10,34 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.restaurant_impl.ui.theme.JetAssignmentTheme
 
 class RestaurantActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JetAssignmentTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Mashhood")
-                }
-            }
+            RestaurantNavigation(navController = rememberNavController())
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello, This is $name's Restaurant. What's the code word?")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JetAssignmentTheme {
-        Greeting("Android")
     }
 }
