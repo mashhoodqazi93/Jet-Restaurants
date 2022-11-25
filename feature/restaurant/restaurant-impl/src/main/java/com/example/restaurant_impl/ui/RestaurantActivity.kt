@@ -1,6 +1,5 @@
-package com.example.jetassignment
+package com.example.restaurant_impl.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,19 +10,28 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.jetassignment.ui.theme.JetAssignmentTheme
-import com.example.restaurant_impl.ui.RestaurantActivity
+import com.example.restaurant_impl.ui.theme.JetAssignmentTheme
 
-class MainActivity : ComponentActivity() {
+class RestaurantActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startActivity(Intent(this, RestaurantActivity::class.java))
+        setContent {
+            JetAssignmentTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    Greeting("Mashhood")
+                }
+            }
+        }
     }
 }
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    Text(text = "Hello, This is $name's Restaurant. What's the code word?")
 }
 
 @Preview(showBackground = true)
