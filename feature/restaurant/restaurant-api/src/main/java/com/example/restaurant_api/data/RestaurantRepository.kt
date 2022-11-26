@@ -1,7 +1,7 @@
 package com.example.restaurant_api.data
 
-import com.example.restaurant_api.model.Restaurant
+import com.example.restaurant_api.model.RestaurantsResponse
 
 interface RestaurantRepository {
-    suspend fun getRestaurantsList(): List<Restaurant>
+    suspend fun getRestaurantsList(): RestaurantsResponse
 }
