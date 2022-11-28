@@ -2,5 +2,7 @@
     <string name="title_activity_restaurant">RestaurantActivity</string>
 
     <string name="top_bar_title">JET Restaurants</string>
+    <string name="search_hint">Search for your favourite restaurant</string>
+    <string name="sorting_dialog_title">Select Sorting Option</string>
 
 </resources>

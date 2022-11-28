@@ -1,5 +1,6 @@
 package com.example.restaurant_impl.ui.screens
 
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,12 +15,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,46 +31,67 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.restaurant_impl.NavigationCommand
 import com.jet.database.model.enums.SortValue
 import com.example.restaurant_impl.R
 import com.example.restaurant_impl.database.entities.Restaurant
+import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel.RestaurantsEvent
+import kotlinx.coroutines.launch
 
 @Composable
-fun RestaurantListScreen(navController: NavController) {
+fun RestaurantListScreen() {
     val viewModel: RestaurantListViewModel = hiltViewModel()
-    //val restaurants = viewModel.restaurantsObservable.observeAsState(emptyList())
-    RestaurantListUi(viewModel)
-    val context = LocalContext.current
-
+    val nav by viewModel.navigation.asLiveData().observeAsState()
+    RestaurantListUi(viewModel, nav)
 }
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
-private fun RestaurantListUi(viewModel: RestaurantListViewModel) {
+private fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: NavigationCommand?) {
     val stateFlow = viewModel.state.collectAsStateWithLifecycle()
     val state = stateFlow.value
     val restaurants = state.restaurantsList
     val searchQuery = state.searchQuery
-    val selectedSortValue = state.currentSortingValue
+    val currentSortValue = state.currentSortingValue
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+    val handleEvent = viewModel::handleEvents
+    val openBottomSheet = {
+        coroutineScope.launch {
+            bottomSheetState.show()
+        }
+    }
 
-    Scaffold(
-        topBar = { TopBar(title = stringResource(id = R.string.top_bar_title)) },
-        modifier = Modifier.fillMaxSize(),
-        backgroundColor = MaterialTheme.colors.background
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues = paddingValues)
-                .verticalScroll(rememberScrollState())
-        ) {
-            HeaderSearchAndSort(searchQuery, viewModel::handleEvents)
-            RestaurantList(restaurants.orEmpty(), selectedSortValue)
+    when (navigation) {
+        is RestaurantNavigation.SortOptionDialog -> {
+            openBottomSheet()
+        }
+    }
+
+
+    ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = { SortingBottomSheet(bottomSheetState = bottomSheetState, handleEvent = handleEvent, currentSortValue = currentSortValue)}, sheetShape = RoundedCornerShape(16.dp)) {
+        Scaffold(
+            topBar = { TopBar(title = stringResource(id = R.string.top_bar_title)) },
+            modifier = Modifier.fillMaxSize(),
+            backgroundColor = MaterialTheme.colors.background,
+            scaffoldState = scaffoldState
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues = paddingValues)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                HeaderSearchAndSort(searchQuery, viewModel::handleEvents)
+                RestaurantList(restaurants, currentSortValue)
+            }
         }
     }
 }
@@ -88,21 +110,31 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
     Column(Modifier.background(MaterialTheme.colors.primary)) {
         Spacer(modifier = Modifier.size(16.dp))
         Row(
-            modifier = Modifier.background(color = MaterialTheme.colors.primary)
+            modifier = Modifier
+                .background(color = MaterialTheme.colors.primary)
+                .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             SimpleTextField(
                 value = query,
                 onValueChange = { handleEvent(RestaurantsEvent.SearchQueryChanged(it)) },
                 textStyle = MaterialTheme.typography.body2,
-                placeholderText = "Search for your favourite restaurant",
+                placeholderText = stringResource(id = R.string.search_hint),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(end = 16.dp)
                     .height(40.dp)
+                    .weight(0.95f)
                     .background(
                         color = MaterialTheme.colors.background, shape = RoundedCornerShape(20.dp)
                     ),
-                leadingIcon = { Icon(painter = painterResource(id = android.R.drawable.ic_menu_search), contentDescription = null)},
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = android.R.drawable.ic_menu_search),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .size(18.dp)
+                    )
+                },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         Icon(painter = painterResource(id = android.R.drawable.ic_menu_close_clear_cancel),
@@ -110,10 +142,18 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                             modifier = Modifier.clickable { handleEvent(RestaurantsEvent.ClearSearchQuery) })
                     }
                 },
-                fontSize = MaterialTheme.typography.caption.fontSize,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
             )
+            Icon(painter = painterResource(id = R.drawable.ic_sort),
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier
+                    .weight(0.05f)
+                    .size(22.dp)
+                    .clickable {
+                        handleEvent(RestaurantsEvent.SortOptionClicked)
+                    })
         }
         Spacer(modifier = Modifier.size(16.dp))
     }
@@ -161,7 +201,6 @@ fun SimpleTextField(
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    fontSize: TextUnit = MaterialTheme.typography.body2.fontSize,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     cursorBrush: Brush = SolidColor(Color.Black),
 ) {

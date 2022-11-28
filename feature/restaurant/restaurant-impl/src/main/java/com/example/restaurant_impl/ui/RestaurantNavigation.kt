@@ -6,7 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.restaurant_impl.ui.RestaurantNavigationScreen.RestaurantList
+import com.example.restaurant_impl.NavigationCommand
+import com.example.restaurant_impl.ui.RestaurantNavigation.RestaurantList
 import com.example.restaurant_impl.ui.screens.RestaurantListScreen
 
 @Composable
@@ -18,10 +19,13 @@ fun RestaurantNavigation(navController: NavHostController) {
 
 private fun NavGraphBuilder.addRestaurantListScreen(navController: NavController){
     composable(RestaurantList.route) {
-        RestaurantListScreen(navController)
+        RestaurantListScreen()
     }
 }
 
-sealed class RestaurantNavigationScreen(val route: String) {
-    object RestaurantList: RestaurantNavigationScreen("restaurant_list")
+sealed class RestaurantNavigation(val route: String): NavigationCommand() {
+    // Screens
+    object RestaurantList: RestaurantNavigation("restaurant_list")
+    //Dialogs
+    object SortOptionDialog: RestaurantNavigation("sort_option")
 }
