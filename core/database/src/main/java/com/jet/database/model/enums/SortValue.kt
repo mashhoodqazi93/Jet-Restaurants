@@ -1,4 +1,4 @@
-package com.example.restaurant_impl.ui.enums
+package com.jet.database.model.enums
 
 enum class SortValue(private val value: String) {
     STATUS("status"),

@@ -12,12 +12,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,15 +33,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.restaurant_api.model.Restaurant
+import com.jet.database.model.enums.SortValue
 import com.example.restaurant_impl.R
+import com.example.restaurant_impl.database.entities.Restaurant
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel.RestaurantsEvent
 
 @Composable
 fun RestaurantListScreen(navController: NavController) {
     val viewModel: RestaurantListViewModel = hiltViewModel()
+    //val restaurants = viewModel.restaurantsObservable.observeAsState(emptyList())
     RestaurantListUi(viewModel)
+    val context = LocalContext.current
+
 }
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -49,6 +55,7 @@ private fun RestaurantListUi(viewModel: RestaurantListViewModel) {
     val state = stateFlow.value
     val restaurants = state.restaurantsList
     val searchQuery = state.searchQuery
+    val selectedSortValue = state.currentSortingValue
 
     Scaffold(
         topBar = { TopBar(title = stringResource(id = R.string.top_bar_title)) },
@@ -62,7 +69,7 @@ private fun RestaurantListUi(viewModel: RestaurantListViewModel) {
                 .verticalScroll(rememberScrollState())
         ) {
             HeaderSearchAndSort(searchQuery, viewModel::handleEvents)
-            RestaurantList(restaurants)
+            RestaurantList(restaurants.orEmpty(), selectedSortValue)
         }
     }
 }
@@ -95,6 +102,7 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                     .background(
                         color = MaterialTheme.colors.background, shape = RoundedCornerShape(20.dp)
                     ),
+                leadingIcon = { Icon(painter = painterResource(id = android.R.drawable.ic_menu_search), contentDescription = null)},
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         Icon(painter = painterResource(id = android.R.drawable.ic_menu_close_clear_cancel),
@@ -112,23 +120,23 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
 }
 
 @Composable
-private fun RestaurantList(restaurants: List<Restaurant>) {
+private fun RestaurantList(restaurants: List<Restaurant>, selectedSortValue: SortValue) {
     restaurants.forEach { restaurant ->
-        RestaurantListItem(restaurant.name, restaurant.status, "")
+        RestaurantListItem(restaurant, selectedSortValue)
     }
 }
 
 @Composable
-private fun RestaurantListItem(name: String, status: String, sortOption: String) {
+private fun RestaurantListItem(restaurant: Restaurant, selectedSortValue: SortValue) {
     Column(modifier = Modifier
         .clickable { }
         .padding(16.dp)) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Text(text = name, style = MaterialTheme.typography.body2)
-            Text(text = status, style = MaterialTheme.typography.body2)
+            Text(text = restaurant.name, style = MaterialTheme.typography.body2)
+            Text(text = restaurant.status, style = MaterialTheme.typography.body2)
         }
         Text(
-            text = "Distance: 15.0 km",
+            text = "$selectedSortValue : ${restaurant.getSortingValue(selectedSortValue)}",
             modifier = Modifier.padding(top = 8.dp),
             style = MaterialTheme.typography.caption
         )
