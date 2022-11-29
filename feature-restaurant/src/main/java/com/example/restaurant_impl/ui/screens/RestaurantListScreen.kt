@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
@@ -42,16 +43,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
-fun RestaurantListScreen() {
-    val viewModel: RestaurantListViewModel = hiltViewModel()
-    val nav = viewModel.navigation/*asLiveData().observeAsState()*/
+fun RestaurantListScreen(viewModel: RestaurantListViewModel = hiltViewModel()) {
+    val nav = viewModel.navigation
     RestaurantListUi(viewModel, nav)
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
-private fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<NavigationCommand>) {
+fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<NavigationCommand>) {
     val stateFlow = viewModel.state.collectAsStateWithLifecycle()
     val state = stateFlow.value
     val restaurants = state.restaurantsList
@@ -152,6 +152,7 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier
+                    .testTag("sort_icon")
                     .weight(0.05f)
                     .size(22.dp)
                     .clickable {
