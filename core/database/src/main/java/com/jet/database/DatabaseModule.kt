@@ -7,7 +7,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jet.database.dao.RestaurantDao
-import com.jet.database.data.entities.RestaurantStatus
+import com.jet.database.entities.RestaurantStatus
 import com.jet.database.model.RestaurantsResponse
 import dagger.Module
 import dagger.Provides
