@@ -1,7 +1,7 @@
 package com.example.restaurant_impl.ui.viewstates
 
+import com.jet.database.entities.Restaurant
 import com.jet.database.model.enums.SortValue
-import com.example.restaurant_impl.database.entities.Restaurant
 
 data class RestaurantListViewState(
     val isLoading: Boolean = false,

@@ -1,11 +1,10 @@
 package com.example.restaurant_impl.data
 
-import android.content.Context
 import com.jet.database.dao.RestaurantDao
-import com.example.restaurant_impl.database.entities.Restaurant
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.jet.database.entities.Restaurant
+import com.jet.database.entities.RestaurantMapper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RestaurantLocalDataSource @Inject constructor(
@@ -13,6 +12,6 @@ class RestaurantLocalDataSource @Inject constructor(
 ) {
 
     fun getAllRestaurants(query: String, sortValue: String): Flow<List<Restaurant>> {
-        return restaurantDao.getRestaurantList(query, sortValue)
+        return restaurantDao.getRestaurantList(query, sortValue).map { RestaurantMapper.toRestaurantList(it) }
     }
 }

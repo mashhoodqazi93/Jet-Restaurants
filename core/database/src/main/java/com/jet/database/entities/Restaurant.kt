@@ -1,30 +1,17 @@
-package com.example.restaurant_impl.database.entities
+package com.jet.database.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.jet.database.model.enums.SortValue
 
-@Entity(tableName = "restaurant_table")
-class Restaurant(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") var id: Long = 0L,
-
+data class Restaurant(
     @SerializedName("name")
-    @ColumnInfo(name = "name") val name: String = "",
-
+    val name: String = "",
     @SerializedName("status")
-    @ColumnInfo(name = "status") val status: String = "",
-
+    val status: String = "",
     @SerializedName("sortingValues")
-    @Embedded
-    val sortingValues: SortingValues,
+    val sortingValues: SortingOptions,
 ) {
-
-    fun getSortingValue(sortValue: SortValue): Double{
+    fun getSortingValue(sortValue: SortValue): String{
         return when(sortValue){
             SortValue.BEST_MATCH -> sortingValues.bestMatch
             SortValue.NEWEST -> sortingValues.newest
@@ -34,32 +21,25 @@ class Restaurant(
             SortValue.PRODUCT_PRICE_AVERAGE -> sortingValues.averageProductPrice.toDouble()
             SortValue.DELIVERY_COST -> sortingValues.deliveryCosts.toDouble()
             SortValue.MIN_COST -> sortingValues.minCost.toDouble()
-        }
+        }.toString()
     }
 }
 
-data class SortingValues(
-    @ColumnInfo(name = "best_match")
-    @SerializedName("bestMatch") val bestMatch: Double,
-
-    @ColumnInfo(name = "newest")
-    @SerializedName("newest") val newest: Double,
-
-    @ColumnInfo(name = "rating_average")
-    @SerializedName("ratingAverage") val ratingAverage: Double,
-
-    @ColumnInfo(name = "distance")
-    @SerializedName("distance") val distance: Int,
-
-    @ColumnInfo(name = "popularity")
-    @SerializedName("popularity") val popularity: Double,
-
-    @ColumnInfo(name = "average_product_price")
-    @SerializedName("averageProductPrice") val averageProductPrice: Int,
-
-    @ColumnInfo(name = "delivery_costs")
-    @SerializedName("deliveryCosts") val deliveryCosts: Int,
-
-    @ColumnInfo(name = "min_cost")
-    @SerializedName("minCost") val minCost: Int
+data class SortingOptions(
+    @SerializedName("bestMatch")
+    val bestMatch: Double,
+    @SerializedName("newest")
+    val newest: Double,
+    @SerializedName("ratingAverage")
+    val ratingAverage: Double,
+    @SerializedName("distance")
+    val distance: Int,
+    @SerializedName("popularity")
+    val popularity: Double,
+    @SerializedName("averageProductPrice")
+    val averageProductPrice: Int,
+    @SerializedName("deliveryCosts")
+    val deliveryCosts: Int,
+    @SerializedName("minCost")
+    val minCost: Int
 )

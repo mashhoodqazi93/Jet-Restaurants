@@ -4,17 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.restaurant_impl.ComposeUiEvent
 import com.example.restaurant_impl.domain.GetRestaurantsList
-import com.example.restaurant_impl.domain.ObserveRestaurants
 import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewstates.RestaurantListViewState
-import com.jet.database.dao.RestaurantDao
 import com.jet.database.model.enums.SortValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
