@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,8 @@ fun HeaderWithCross(bottomSheetState: ModalBottomSheetState) {
         Icon(painter = painterResource(id = android.R.drawable.ic_menu_close_clear_cancel),
             tint = Color.Gray,
             contentDescription = null,
-            modifier = Modifier.clickable {
+            modifier = Modifier.testTag("cross_icon")
+                .clickable {
                 coroutineScope.launch {
                     bottomSheetState.hide()
                 }
