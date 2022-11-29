@@ -3,8 +3,7 @@ package com.jet.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
-import com.example.restaurant_impl.database.entities.Restaurant
+import com.jet.database.entities.RestaurantEntity
 import com.jet.database.entities.RestaurantStatus
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface RestaurantDao {
 
     @Insert
-    suspend fun insertRestaurants(restaurants: List<Restaurant>)
+    suspend fun insertRestaurants(restaurants: List<RestaurantEntity>)
 
     @Query(
         "SELECT * FROM restaurant_table " +
@@ -25,11 +24,11 @@ interface RestaurantDao {
                 "CASE WHEN :sortOrder = 'ratingAverage' THEN rating_average END DESC," +
                 "CASE WHEN :sortOrder = 'popularity' THEN popularity END DESC," +
                 "CASE WHEN :sortOrder = 'averageProductPrice' THEN average_product_price END ASC," +
-                "CASE WHEN :sortOrder = 'deliveryCosts' THEN average_product_price END ASC," +
+                "CASE WHEN :sortOrder = 'deliveryCosts' THEN delivery_costs END ASC," +
                 "CASE WHEN :sortOrder = 'minCost' THEN min_cost END ASC"
 
     )
-    fun getRestaurantList(query: String, sortOrder: String): Flow<List<Restaurant>>
+    fun getRestaurantList(query: String = "", sortOrder: String? = null): Flow<List<RestaurantEntity>>
 
     @Insert
     suspend fun insertRestaurantStatus(status: List<RestaurantStatus>)

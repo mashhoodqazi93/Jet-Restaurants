@@ -1,6 +1,6 @@
 package com.example.restaurant_impl.domain
 
-import com.example.restaurant_impl.database.entities.Restaurant
+import com.jet.database.entities.Restaurant
 import kotlinx.coroutines.flow.Flow
 
 interface RestaurantRepository {

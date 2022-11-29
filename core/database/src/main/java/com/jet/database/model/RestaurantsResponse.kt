@@ -1,9 +1,9 @@
 package com.jet.database.model
 
-import com.example.restaurant_impl.database.entities.Restaurant
 import com.google.gson.annotations.SerializedName
+import com.jet.database.entities.RestaurantEntity
 
 data class RestaurantsResponse(
     @SerializedName("restaurants")
-    val restaurants: List<Restaurant> = emptyList()
+    val restaurants: List<RestaurantEntity> = emptyList()
 )

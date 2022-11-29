@@ -34,10 +34,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.restaurant_impl.NavigationCommand
 import com.jet.database.model.enums.SortValue
 import com.example.restaurant_impl.R
-import com.example.restaurant_impl.database.entities.Restaurant
 import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel.RestaurantsEvent
+import com.jet.database.entities.Restaurant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 

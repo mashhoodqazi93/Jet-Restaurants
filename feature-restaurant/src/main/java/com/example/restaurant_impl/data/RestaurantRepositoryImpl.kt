@@ -1,7 +1,7 @@
 package com.example.restaurant_impl.data
 
-import com.example.restaurant_impl.database.entities.Restaurant
 import com.example.restaurant_impl.domain.RestaurantRepository
+import com.jet.database.entities.Restaurant
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
