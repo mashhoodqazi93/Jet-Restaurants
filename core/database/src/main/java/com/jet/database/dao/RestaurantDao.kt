@@ -24,14 +24,11 @@ interface RestaurantDao {
                 "CASE WHEN :sortOrder = 'ratingAverage' THEN rating_average END DESC," +
                 "CASE WHEN :sortOrder = 'popularity' THEN popularity END DESC," +
                 "CASE WHEN :sortOrder = 'averageProductPrice' THEN average_product_price END ASC," +
-                "CASE WHEN :sortOrder = 'deliveryCosts' THEN average_product_price END ASC," +
+                "CASE WHEN :sortOrder = 'deliveryCosts' THEN delivery_costs END ASC," +
                 "CASE WHEN :sortOrder = 'minCost' THEN min_cost END ASC"
 
     )
     fun getRestaurantList(query: String = "", sortOrder: String? = null): Flow<List<RestaurantEntity>>
-
-/*    @Query("SELECT * FROM restaurant_table")
-    fun getRestaurantListTest(): Flow<List<Restaurant>>*/
 
     @Insert
     suspend fun insertRestaurantStatus(status: List<RestaurantStatus>)

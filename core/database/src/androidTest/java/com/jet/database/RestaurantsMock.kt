@@ -8,8 +8,7 @@ import com.jet.database.model.enums.SortValue
 object RestaurantsMock {
 
     private val restaurantA = RestaurantEntity(
-        id = 1,
-        name = "Tanoshii Sushi", status = "open", sortingValues = SortingOptionsEntity(
+        id = 1, name = "Tanoshii Sushi", status = "open", sortingValues = SortingOptionsEntity(
             bestMatch = 0.0,
             newest = 96.0,
             ratingAverage = 4.5,
@@ -22,8 +21,7 @@ object RestaurantsMock {
     )
 
     private val restaurantB = RestaurantEntity(
-        id = 2,
-        name = "Tandoori Express", status = "closed", sortingValues = SortingOptionsEntity(
+        id = 2, name = "Tandoori Express", status = "closed", sortingValues = SortingOptionsEntity(
             bestMatch = 1.0,
             newest = 266.0,
             ratingAverage = 4.5,
@@ -36,8 +34,7 @@ object RestaurantsMock {
     )
 
     private val restaurantC = RestaurantEntity(
-        id = 3,
-        name = "Royal Thai", status = "order ahead", sortingValues = SortingOptionsEntity(
+        id = 3, name = "Royal Thai", status = "order ahead", sortingValues = SortingOptionsEntity(
             bestMatch = 2.0,
             newest = 133.0,
             ratingAverage = 4.5,
@@ -50,8 +47,7 @@ object RestaurantsMock {
     )
 
     private val restaurantD = RestaurantEntity(
-        id = 4,
-        name = "Sushi One", status = "open", sortingValues = SortingOptionsEntity(
+        id = 4, name = "Sushi One", status = "open", sortingValues = SortingOptionsEntity(
             bestMatch = 3.0,
             newest = 238.0,
             ratingAverage = 4.0,
@@ -64,8 +60,7 @@ object RestaurantsMock {
     )
 
     private val restaurantE = RestaurantEntity(
-        id = 5,
-        name = "Roti Shop", status = "open", sortingValues = SortingOptionsEntity(
+        id = 5, name = "Roti Shop", status = "open", sortingValues = SortingOptionsEntity(
             bestMatch = 4.0,
             newest = 247.0,
             ratingAverage = 4.5,
@@ -82,14 +77,43 @@ object RestaurantsMock {
     }
 
     fun getSortedMockRestaurants(sortValue: SortValue): List<RestaurantEntity> {
-       return when (sortValue){
+        return when (sortValue) {
+            SortValue.BEST_MATCH -> {
+                listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
+            }
+            SortValue.NEWEST -> {
+                listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
+            }
+            SortValue.RATING_AVERAGE -> {
+                listOf(restaurantA, restaurantE, restaurantD, restaurantC, restaurantB)
+            }
             SortValue.DISTANCE -> {
                 listOf(restaurantA, restaurantE, restaurantD, restaurantC, restaurantB)
             }
-           else -> {
-               listOf(restaurantA, restaurantD, restaurantE, restaurantC, restaurantB)
-           }
-       }
+            SortValue.POPULARITY -> {
+                listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
+            }
+            SortValue.PRODUCT_PRICE_AVERAGE -> {
+                listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
+            }
+            SortValue.DELIVERY_COST -> {
+                listOf(restaurantD, restaurantE, restaurantA, restaurantC, restaurantB)
+            }
+            SortValue.MIN_COST -> {
+                listOf(restaurantA, restaurantD, restaurantE, restaurantC, restaurantB)
+            }
+            else -> {
+                listOf(restaurantA, restaurantD, restaurantE, restaurantC, restaurantB)
+            }
+        }
+    }
+
+    fun getSearchedMockRestaurants(query: String): List<RestaurantEntity> {
+        return when (query) {
+            "sus" -> listOf(restaurantA, restaurantD)
+            "tan" -> listOf(restaurantA, restaurantB)
+            else -> emptyList()
+        }
     }
 
     fun restaurantStatusList() = listOf(

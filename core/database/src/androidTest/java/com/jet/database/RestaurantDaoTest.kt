@@ -3,6 +3,7 @@ package com.jet.database
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.jet.database.dao.RestaurantDao
+import com.jet.database.entities.RestaurantMapper
 import com.jet.database.model.enums.SortValue
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -39,11 +40,33 @@ class RestaurantDaoTest {
     fun sortingTest() = runBlocking {
         val restaurantList = RestaurantsMock.getMockRestaurants()
         restaurantDao.insertRestaurants(restaurantList)
-        val result = restaurantDao.getRestaurantList(sortOrder = SortValue.DISTANCE.toString()).first()
-        val expectedResult = RestaurantsMock.getSortedMockRestaurants(SortValue.DISTANCE)
 
-        //Assert.assertArrayEquals(expectedResult, result)
-        Assert.assertEquals(true, result.equals(expectedResult))
+        // Testing for All Sorting Options
+        SortValue.values().forEach { sortingOption ->
+            val result = RestaurantMapper.toRestaurantList(
+                restaurantDao.getRestaurantList(sortOrder = sortingOption.toString()).first()
+            )
+            val expectedResult = RestaurantMapper.toRestaurantList(
+                RestaurantsMock.getSortedMockRestaurants(sortingOption)
+            )
+            Assert.assertEquals(true, result == expectedResult)
+        }
+    }
+
+    @Test
+    fun searchTest() = runBlocking {
+        val searchQueryList = listOf<String>("sus", "tan")
+        val restaurantList = RestaurantsMock.getMockRestaurants()
+        restaurantDao.insertRestaurants(restaurantList)
+
+        searchQueryList.forEach { query ->
+            val result = RestaurantMapper.toRestaurantList(
+                restaurantDao.getRestaurantList(query = query).first()
+            )
+            val expectedResult =
+                RestaurantMapper.toRestaurantList(RestaurantsMock.getSearchedMockRestaurants(query))
+            Assert.assertEquals(true, result == expectedResult)
+        }
     }
 
     @After
