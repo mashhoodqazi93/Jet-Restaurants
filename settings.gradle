@@ -14,9 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "JetAssignment"
 include ':app'
-include ':feature'
-include ':feature:restaurant'
-include ':feature:restaurant:restaurant-api'
-include ':feature:restaurant:restaurant-impl'
+include ':feature-restaurant'
 include ':core'
 include ':core:database'

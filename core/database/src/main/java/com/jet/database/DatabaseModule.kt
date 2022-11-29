@@ -1,15 +1,13 @@
 package com.jet.database
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.restaurant_impl.database.entities.Restaurant
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jet.database.dao.RestaurantDao
+import com.jet.database.entities.RestaurantStatus
 import com.jet.database.model.RestaurantsResponse
 import dagger.Module
 import dagger.Provides
@@ -19,7 +17,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -47,6 +44,13 @@ object DatabaseModule {
                 //Pre-populating database
                 GlobalScope.launch {
                     restaurantDaoProvider.get().insertRestaurants(restaurants)
+                    restaurantDaoProvider.get().insertRestaurantStatus(
+                        listOf(
+                            RestaurantStatus("open", 1),
+                            RestaurantStatus("order ahead", 2),
+                            RestaurantStatus("closed", 3)
+                        )
+                    )
                 }
             }
 

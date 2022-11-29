@@ -1,7 +1,6 @@
 package com.jet.database.model.enums
 
 enum class SortValue(private val value: String) {
-    STATUS("status"),
     BEST_MATCH("bestMatch"),
     NEWEST("newest"),
     RATING_AVERAGE("ratingAverage"),
