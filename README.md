@@ -1,7 +1,7 @@
 
 # JET Restaurants
 
-This project is done as [Assignment](readme/assignment.docx) for Senior Android Engineer position at JET.
+This project is done as [Assignment](readme/assignment.docx) for Senior Android Engineer position at Just Eat Takeaway.com.
 
 ## Authors
 

@@ -1,6 +1,5 @@
 package com.example.restaurant_impl.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.restaurant_impl.ComposeUiEvent
