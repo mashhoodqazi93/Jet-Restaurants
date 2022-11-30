@@ -15,17 +15,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RestaurantListViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val getRestaurantsList: GetRestaurantsList
+    savedStateHandle: SavedStateHandle, private val getRestaurantsList: GetRestaurantsList
 ) : JetViewModel() {
 
     val state = MutableStateFlow(RestaurantListViewState())
     private val savedStateHandle: SavedStateHandle
+
     init {
         this.savedStateHandle = savedStateHandle
-     //   if(savedStateHandle.keys().contains(SORT_OPTION)){
-            state.value = state.value.copy(currentSortingValue = SortOption.valueOf(this.savedStateHandle[SORT_OPTION]?:SortOption.NONE.name))
-       // }
+        state.value = state.value.copy(
+            currentSortingValue = SortOption.valueOf(
+                this.savedStateHandle[SORT_OPTION] ?: SortOption.NONE.name
+            )
+        )
         getRestaurants()
     }
 
@@ -80,7 +82,7 @@ class RestaurantListViewModel @Inject constructor(
         data class SearchQueryChanged(val query: String) : RestaurantsEvent()
         object ClearSearchQuery : RestaurantsEvent()
         object SortOptionClicked : RestaurantsEvent()
-        data class SortOptionSelected(val selectedSortOption: SortOption): RestaurantsEvent()
+        data class SortOptionSelected(val selectedSortOption: SortOption) : RestaurantsEvent()
     }
 
     companion object {
