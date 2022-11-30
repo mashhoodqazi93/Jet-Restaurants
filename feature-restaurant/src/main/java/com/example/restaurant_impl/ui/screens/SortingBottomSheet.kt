@@ -96,7 +96,7 @@ fun SortOptionItem(
             hideBottomSheet()
         }
         .padding(vertical = 16.dp, horizontal = 24.dp)) {
-        RadioButton(selected = isSelected, modifier = Modifier.padding(end = 16.dp), onClick = null)
+        RadioButton(selected = isSelected, modifier = Modifier.padding(end = 16.dp), onClick = null, colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary))
         Text(text = title)
     }
 }

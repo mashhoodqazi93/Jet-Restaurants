@@ -21,6 +21,7 @@ data class Restaurant(
             SortOption.PRODUCT_PRICE_AVERAGE -> sortingValues.averageProductPrice
             SortOption.DELIVERY_COST -> sortingValues.deliveryCosts
             SortOption.MIN_COST -> sortingValues.minCost
+            else -> ""
         }.toString()
     }
 }

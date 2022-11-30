@@ -6,6 +6,7 @@
     <string name="sorting_dialog_title">Select Sorting Option</string>
 
     <string-array name="sorting_options_label">
+        <item>None (Default)</item>
         <item>Best Match</item>
         <item>Newest</item>
         <item>Average Rating</item>

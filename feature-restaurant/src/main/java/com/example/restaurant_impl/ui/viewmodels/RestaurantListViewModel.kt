@@ -1,5 +1,6 @@
 package com.example.restaurant_impl.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.restaurant_impl.ComposeUiEvent
@@ -20,8 +21,12 @@ class RestaurantListViewModel @Inject constructor(
 ) : JetViewModel() {
 
     val state = MutableStateFlow(RestaurantListViewState())
-
+    private val savedStateHandle: SavedStateHandle
     init {
+        this.savedStateHandle = savedStateHandle
+     //   if(savedStateHandle.keys().contains(SORT_OPTION)){
+            state.value = state.value.copy(currentSortingValue = SortOption.valueOf(this.savedStateHandle[SORT_OPTION]?:SortOption.NONE.name))
+       // }
         getRestaurants()
     }
 
@@ -68,6 +73,7 @@ class RestaurantListViewModel @Inject constructor(
 
     private fun onSortOptionSelected(sortOption: SortOption) {
         state.value = state.value.copy(currentSortingValue = sortOption)
+        savedStateHandle[SORT_OPTION] = sortOption.name
         getRestaurants()
     }
 
@@ -76,5 +82,9 @@ class RestaurantListViewModel @Inject constructor(
         object ClearSearchQuery : RestaurantsEvent()
         object SortOptionClicked : RestaurantsEvent()
         data class SortOptionSelected(val selectedSortOption: SortOption): RestaurantsEvent()
+    }
+
+    companion object {
+        const val SORT_OPTION = "sort_option"
     }
 }

@@ -1,15 +1,7 @@
 
 # JET Restaurants
 
-This project is done as assignemnt for Senior Android Engineer position at JET. 
-
-The scope of this project is to
-- Render Restaurants List from Json file
-- Apply Search Filter and Sorting
-- Unit/UI Testing
-
-
-
+This project is done as [Assignment]() for Senior Android Engineer position at JET.
 
 ## Authors
 
@@ -18,8 +10,25 @@ The scope of this project is to
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+<img src="readme/distance.png" />
+<img src="readme/sort.png" />
+<img src="readme/list_simple.png" />
+<img src="readme/search.png" />
 
+## Feature and Functionality
+Following are the basic functionalities that were required and have been implemented
+| Requested Functionality  | Status |
+| ------------- | ------------- |
+| Read Restaurants List from JSON and display  | DONE  |
+| Search Restaurants based on `name`  | DONE  |
+| Always Sort by Restaurant `status`  | DONE  |
+| Add additional sorting functionallity based on other Parameters  | DONE  |
+| Keep UI and Business Logic code sepatate  | DONE  |
+| Maintain "Sorting Value" if app is killed in background by the OS **(BONUS)** | DONE  |
+| Modularization | DONE  |
+| Unit Testing  | DONE  |
+| UI Testing **(BONUS)** | DONE  |
+| Used Version Control and Readme | DONE  |
 
 ## Architecture
 Overall, this project has been purely built using the guidelines provided by google.
@@ -41,6 +50,7 @@ We have the following modules in this project
 - Feature-Restaurant Module (Responsible for the complete feature implementation)
 
 In future if we want to add more features, then separate feature modules will be created for that.
+
 ## Strategy
 
 ### Reading Data from JSON File

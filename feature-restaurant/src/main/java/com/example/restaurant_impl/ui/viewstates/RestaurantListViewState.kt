@@ -8,6 +8,6 @@ data class RestaurantListViewState(
     val searchQuery: String = "",
     val restaurantsList: List<Restaurant> = emptyList(),
     val filteredRestaurantList: List<Restaurant> = emptyList(),
-    val currentSortingValue: SortOption = SortOption.POPULARITY,
+    val currentSortingValue: SortOption = SortOption.NONE,
     val switchEnabled: Boolean = false
 )
