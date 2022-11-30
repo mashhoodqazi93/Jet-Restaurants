@@ -139,7 +139,7 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
             SimpleTextField(
                 value = query,
                 onValueChange = { handleEvent(RestaurantsEvent.SearchQueryChanged(it)) },
-                textStyle = MaterialTheme.typography.body2,
+                textStyle = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onSurface),
                 placeholderText = stringResource(id = R.string.search_hint),
                 modifier = Modifier
                     .padding(end = 16.dp)
@@ -168,7 +168,8 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
             )
             Icon(painter = painterResource(id = R.drawable.ic_sort),
                 contentDescription = null,
