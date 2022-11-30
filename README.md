@@ -111,3 +111,4 @@ There are a few other items that could make this project look more complete.
 
 - SpotLess (For ensuring code quality)
 - Bitrise (For auto build generation using CI/CD pipelines)
+- All Dependencies can be placed in Core Module, so that all other modules can just use the reference to consume those dependencies. This will add a huge advantage in easy dependency management and also ensure that all modules are using similar versions of libraries.
