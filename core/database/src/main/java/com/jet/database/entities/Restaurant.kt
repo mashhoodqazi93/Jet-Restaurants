@@ -1,7 +1,7 @@
 package com.jet.database.entities
 
 import com.google.gson.annotations.SerializedName
-import com.jet.database.model.enums.SortValue
+import com.jet.database.model.enums.SortOption
 
 data class Restaurant(
     @SerializedName("name")
@@ -11,16 +11,17 @@ data class Restaurant(
     @SerializedName("sortingValues")
     val sortingValues: SortingOptions,
 ) {
-    fun getSortingValue(sortValue: SortValue): String{
+    fun getSortingValue(sortValue: SortOption): String{
         return when(sortValue){
-            SortValue.BEST_MATCH -> sortingValues.bestMatch
-            SortValue.NEWEST -> sortingValues.newest
-            SortValue.RATING_AVERAGE -> sortingValues.ratingAverage
-            SortValue.DISTANCE -> sortingValues.distance.toDouble()
-            SortValue.POPULARITY -> sortingValues.popularity
-            SortValue.PRODUCT_PRICE_AVERAGE -> sortingValues.averageProductPrice.toDouble()
-            SortValue.DELIVERY_COST -> sortingValues.deliveryCosts.toDouble()
-            SortValue.MIN_COST -> sortingValues.minCost.toDouble()
+            SortOption.BEST_MATCH -> sortingValues.bestMatch
+            SortOption.NEWEST -> sortingValues.newest
+            SortOption.RATING_AVERAGE -> sortingValues.ratingAverage
+            SortOption.DISTANCE -> sortingValues.distance
+            SortOption.POPULARITY -> sortingValues.popularity
+            SortOption.PRODUCT_PRICE_AVERAGE -> sortingValues.averageProductPrice
+            SortOption.DELIVERY_COST -> sortingValues.deliveryCosts
+            SortOption.MIN_COST -> sortingValues.minCost
+            else -> ""
         }.toString()
     }
 }

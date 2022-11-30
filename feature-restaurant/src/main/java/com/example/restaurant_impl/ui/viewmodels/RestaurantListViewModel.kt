@@ -6,7 +6,7 @@ import com.example.restaurant_impl.ComposeUiEvent
 import com.example.restaurant_impl.domain.GetRestaurantsList
 import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewstates.RestaurantListViewState
-import com.jet.database.model.enums.SortValue
+import com.jet.database.model.enums.SortOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +20,12 @@ class RestaurantListViewModel @Inject constructor(
 ) : JetViewModel() {
 
     val state = MutableStateFlow(RestaurantListViewState())
-
+    private val savedStateHandle: SavedStateHandle
     init {
+        this.savedStateHandle = savedStateHandle
+     //   if(savedStateHandle.keys().contains(SORT_OPTION)){
+            state.value = state.value.copy(currentSortingValue = SortOption.valueOf(this.savedStateHandle[SORT_OPTION]?:SortOption.NONE.name))
+       // }
         getRestaurants()
     }
 
@@ -58,6 +62,7 @@ class RestaurantListViewModel @Inject constructor(
     private fun onClearSearchQuery() {
         viewModelScope.launch {
             state.value = state.value.copy(searchQuery = "")
+            getRestaurants()
         }
     }
 
@@ -65,8 +70,9 @@ class RestaurantListViewModel @Inject constructor(
         navigateTo { RestaurantNavigation.SortOptionDialog }
     }
 
-    private fun onSortOptionSelected(sortOption: SortValue) {
+    private fun onSortOptionSelected(sortOption: SortOption) {
         state.value = state.value.copy(currentSortingValue = sortOption)
+        savedStateHandle[SORT_OPTION] = sortOption.name
         getRestaurants()
     }
 
@@ -74,6 +80,10 @@ class RestaurantListViewModel @Inject constructor(
         data class SearchQueryChanged(val query: String) : RestaurantsEvent()
         object ClearSearchQuery : RestaurantsEvent()
         object SortOptionClicked : RestaurantsEvent()
-        data class SortOptionSelected(val selectedSortOption: SortValue): RestaurantsEvent()
+        data class SortOptionSelected(val selectedSortOption: SortOption): RestaurantsEvent()
+    }
+
+    companion object {
+        const val SORT_OPTION = "sort_option"
     }
 }

@@ -1,19 +1,18 @@
-package com.example.restaurant_impl.ui
+package com.example.jetassignment.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
-import com.example.restaurant_impl.ui.theme.JetAssignmentTheme
+import com.example.jetassignment.ui.theme.JetAssignmentTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+// Parent Activity and the only one in whole app
 @AndroidEntryPoint
-class RestaurantActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             JetAssignmentTheme {
-                RestaurantNavigation(navController = rememberNavController())
+                MainNavigation()
             }
         }
     }

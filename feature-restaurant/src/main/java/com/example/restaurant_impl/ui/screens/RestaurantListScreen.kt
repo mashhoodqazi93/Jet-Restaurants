@@ -1,10 +1,16 @@
 package com.example.restaurant_impl.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -16,13 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.rotary.onPreRotaryScrollEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -33,17 +43,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.restaurant_impl.NavigationCommand
-import com.jet.database.model.enums.SortValue
 import com.example.restaurant_impl.R
 import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel.RestaurantsEvent
 import com.jet.database.entities.Restaurant
+import com.jet.database.model.enums.SortOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
-fun RestaurantListScreen(viewModel: RestaurantListViewModel = hiltViewModel()) {
+fun RestaurantListScreen() {
+    val viewModel: RestaurantListViewModel = hiltViewModel()
     val nav = viewModel.navigation
     RestaurantListUi(viewModel, nav)
 }
@@ -57,7 +68,8 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
     val restaurants = state.restaurantsList
     val searchQuery = state.searchQuery
     val currentSortValue = state.currentSortingValue
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val handleEvent = viewModel::handleEvents
@@ -67,7 +79,7 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
         }
     }
     coroutineScope.launch {
-        navigation.collect{ nav ->
+        navigation.collect { nav ->
             when (nav) {
                 is RestaurantNavigation.SortOptionDialog -> {
                     openBottomSheet()
@@ -79,7 +91,15 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
 
 
 
-    ModalBottomSheetLayout(sheetState = bottomSheetState, sheetContent = { SortingBottomSheet(bottomSheetState = bottomSheetState, handleEvent = handleEvent, currentSortValue = currentSortValue)}, sheetShape = RoundedCornerShape(16.dp)) {
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState, sheetContent = {
+            SortingBottomSheet(
+                bottomSheetState = bottomSheetState,
+                handleEvent = handleEvent,
+                currentSortValue = currentSortValue
+            )
+        }, sheetShape = RoundedCornerShape(16.dp)
+    ) {
         Scaffold(
             topBar = { TopBar(title = stringResource(id = R.string.top_bar_title)) },
             modifier = Modifier.fillMaxSize(),
@@ -90,7 +110,6 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues = paddingValues)
-                    .verticalScroll(rememberScrollState())
             ) {
                 HeaderSearchAndSort(searchQuery, viewModel::handleEvents)
                 RestaurantList(restaurants, currentSortValue)
@@ -142,11 +161,14 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                     if (query.isNotEmpty()) {
                         Icon(painter = painterResource(id = android.R.drawable.ic_menu_close_clear_cancel),
                             contentDescription = null,
-                            modifier = Modifier.clickable { handleEvent(RestaurantsEvent.ClearSearchQuery) })
+                            modifier = Modifier.clickable {
+                                handleEvent(RestaurantsEvent.ClearSearchQuery)
+                                focusManager.clearFocus()
+                            })
                     }
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
             )
             Icon(painter = painterResource(id = R.drawable.ic_sort),
                 contentDescription = null,
@@ -157,6 +179,7 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                     .size(22.dp)
                     .clickable {
                         handleEvent(RestaurantsEvent.SortOptionClicked)
+                        focusManager.clearFocus()
                     })
         }
         Spacer(modifier = Modifier.size(16.dp))
@@ -164,26 +187,37 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
 }
 
 @Composable
-private fun RestaurantList(restaurants: List<Restaurant>, selectedSortValue: SortValue) {
-    restaurants.forEach { restaurant ->
-        RestaurantListItem(restaurant, selectedSortValue)
+private fun RestaurantList(restaurants: List<Restaurant>, selectedSortValue: SortOption) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(), state = rememberLazyListState()
+    ) {
+        restaurants.forEach { restaurant ->
+            item {
+                RestaurantListItem(restaurant, selectedSortValue)
+            }
+        }
     }
 }
 
 @Composable
-private fun RestaurantListItem(restaurant: Restaurant, selectedSortValue: SortValue) {
+private fun RestaurantListItem(restaurant: Restaurant, selectedSortOption: SortOption) {
+    val selectedSortLabel =
+        stringArrayResource(id = R.array.sorting_options_label)[selectedSortOption.ordinal]
     Column(modifier = Modifier
         .clickable { }
-        .padding(16.dp)) {
+        .padding(16.dp)
+        .animateContentSize()) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Text(text = restaurant.name, style = MaterialTheme.typography.body2)
-            Text(text = restaurant.status, style = MaterialTheme.typography.body2)
+            Text(text = restaurant.status.uppercase(), style = MaterialTheme.typography.overline)
         }
-        Text(
-            text = "$selectedSortValue : ${restaurant.getSortingValue(selectedSortValue)}",
-            modifier = Modifier.padding(top = 8.dp),
-            style = MaterialTheme.typography.caption
-        )
+        AnimatedVisibility(selectedSortOption != SortOption.NONE) {
+            Text(
+                text = "$selectedSortLabel : ${restaurant.getSortingValue(selectedSortOption)}",
+                modifier = Modifier.padding(top = 8.dp),
+                style = MaterialTheme.typography.caption
+            )
+        }
     }
     Divider(thickness = 1.dp)
 }

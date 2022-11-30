@@ -3,7 +3,7 @@ package com.jet.database
 import com.jet.database.entities.RestaurantEntity
 import com.jet.database.entities.SortingOptionsEntity
 import com.jet.database.entities.RestaurantStatus
-import com.jet.database.model.enums.SortValue
+import com.jet.database.model.enums.SortOption
 
 object RestaurantsMock {
 
@@ -76,30 +76,30 @@ object RestaurantsMock {
         return listOf(restaurantA, restaurantB, restaurantC, restaurantD, restaurantE)
     }
 
-    fun getSortedMockRestaurants(sortValue: SortValue): List<RestaurantEntity> {
+    fun getSortedMockRestaurants(sortValue: SortOption): List<RestaurantEntity> {
         return when (sortValue) {
-            SortValue.BEST_MATCH -> {
+            SortOption.BEST_MATCH -> {
                 listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
             }
-            SortValue.NEWEST -> {
+            SortOption.NEWEST -> {
                 listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
             }
-            SortValue.RATING_AVERAGE -> {
+            SortOption.RATING_AVERAGE -> {
                 listOf(restaurantA, restaurantE, restaurantD, restaurantC, restaurantB)
             }
-            SortValue.DISTANCE -> {
+            SortOption.DISTANCE -> {
                 listOf(restaurantA, restaurantE, restaurantD, restaurantC, restaurantB)
             }
-            SortValue.POPULARITY -> {
+            SortOption.POPULARITY -> {
                 listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
             }
-            SortValue.PRODUCT_PRICE_AVERAGE -> {
+            SortOption.PRODUCT_PRICE_AVERAGE -> {
                 listOf(restaurantE, restaurantD, restaurantA, restaurantC, restaurantB)
             }
-            SortValue.DELIVERY_COST -> {
+            SortOption.DELIVERY_COST -> {
                 listOf(restaurantD, restaurantE, restaurantA, restaurantC, restaurantB)
             }
-            SortValue.MIN_COST -> {
+            SortOption.MIN_COST -> {
                 listOf(restaurantA, restaurantD, restaurantE, restaurantC, restaurantB)
             }
             else -> {

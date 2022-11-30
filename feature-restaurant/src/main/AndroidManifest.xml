@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".ui.RestaurantActivity"
+            android:name=".ui.RestaurantListTestActivity"
             android:exported="false"
             android:label="@string/title_activity_restaurant">
             <meta-data
