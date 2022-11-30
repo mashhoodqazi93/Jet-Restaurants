@@ -1,7 +1,7 @@
 
 # JET Restaurants
 
-This project is done as [Assignment]() for Senior Android Engineer position at JET.
+This project is done as [Assignment](readme/assignment.docx) for Senior Android Engineer position at JET.
 
 ## Authors
 
@@ -93,6 +93,14 @@ Following UI Tests have been implemneted
 - Sort Button Visibility Test
 - Sort Bottom Dialog Visibility Test
 - Sort Dialog Dismissal Test (on click of cross icon)
+
+### Test Sort Value Persistence on App Kill
+- Run Code on Android Studio using Emulator or Physical Device
+- Select any Sort Option
+- Take App in background by pressing device home
+- In ADB Terminal run command `adb shell am kill com.example.jetassignment`
+- Restore App from background to see that the previously selected Sort Option still persists
+- PS: If we always want to maintain the Sort Option, then we will use Shared Prefs for that purpose (But that is not in the [Assignment](readme/assignment.docx) scope for now)
 
 ## Git Structure
 

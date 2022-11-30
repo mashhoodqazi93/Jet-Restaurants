@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,10 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.rotary.onPreRotaryScrollEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -64,7 +69,7 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
     val searchQuery = state.searchQuery
     val currentSortValue = state.currentSortingValue
     val bottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val handleEvent = viewModel::handleEvents
@@ -161,9 +166,9 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                                 focusManager.clearFocus()
                             })
                     }
-                }/*,
+                },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onD = { focusManager.clearFocus() })*/
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
             )
             Icon(painter = painterResource(id = R.drawable.ic_sort),
                 contentDescription = null,
@@ -174,6 +179,7 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                     .size(22.dp)
                     .clickable {
                         handleEvent(RestaurantsEvent.SortOptionClicked)
+                        focusManager.clearFocus()
                     })
         }
         Spacer(modifier = Modifier.size(16.dp))
