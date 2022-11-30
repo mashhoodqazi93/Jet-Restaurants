@@ -1,5 +1,5 @@
 
-# Project Title
+# JET Restaurants
 
 This project is done as assignemnt for Senior Android Engineer position at JET. 
 
