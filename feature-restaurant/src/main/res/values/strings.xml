@@ -5,4 +5,15 @@
     <string name="search_hint">Search for your favourite restaurant</string>
     <string name="sorting_dialog_title">Select Sorting Option</string>
 
+    <string-array name="sorting_options_label">
+        <item>Best Match</item>
+        <item>Newest</item>
+        <item>Average Rating</item>
+        <item>Distance</item>
+        <item>Popularity</item>
+        <item>Average Product Price</item>
+        <item>Delivery Cost</item>
+        <item>Minimum Cost</item>
+    </string-array>
+
 </resources>

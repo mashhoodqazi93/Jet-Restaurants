@@ -4,7 +4,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.jet.database.dao.RestaurantDao
 import com.jet.database.entities.RestaurantMapper
-import com.jet.database.model.enums.SortValue
+import com.jet.database.model.enums.SortOption
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -42,7 +42,7 @@ class RestaurantDaoTest {
         restaurantDao.insertRestaurants(restaurantList)
 
         // Testing for All Sorting Options
-        SortValue.values().forEach { sortingOption ->
+        SortOption.values().forEach { sortingOption ->
             val result = RestaurantMapper.toRestaurantList(
                 restaurantDao.getRestaurantList(sortOrder = sortingOption.toString()).first()
             )

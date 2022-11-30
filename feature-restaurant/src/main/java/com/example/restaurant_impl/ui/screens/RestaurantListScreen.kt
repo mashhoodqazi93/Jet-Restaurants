@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -33,17 +34,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.restaurant_impl.NavigationCommand
-import com.jet.database.model.enums.SortValue
 import com.example.restaurant_impl.R
 import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel.RestaurantsEvent
 import com.jet.database.entities.Restaurant
+import com.jet.database.model.enums.SortOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
-fun RestaurantListScreen(viewModel: RestaurantListViewModel = hiltViewModel()) {
+fun RestaurantListScreen() {
+    val viewModel: RestaurantListViewModel = hiltViewModel()
     val nav = viewModel.navigation
     RestaurantListUi(viewModel, nav)
 }
@@ -145,7 +147,7 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
                             modifier = Modifier.clickable { handleEvent(RestaurantsEvent.ClearSearchQuery) })
                     }
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
             )
             Icon(painter = painterResource(id = R.drawable.ic_sort),
@@ -164,23 +166,24 @@ private fun HeaderSearchAndSort(query: String, handleEvent: (RestaurantsEvent) -
 }
 
 @Composable
-private fun RestaurantList(restaurants: List<Restaurant>, selectedSortValue: SortValue) {
+private fun RestaurantList(restaurants: List<Restaurant>, selectedSortValue: SortOption) {
     restaurants.forEach { restaurant ->
         RestaurantListItem(restaurant, selectedSortValue)
     }
 }
 
 @Composable
-private fun RestaurantListItem(restaurant: Restaurant, selectedSortValue: SortValue) {
+private fun RestaurantListItem(restaurant: Restaurant, selectedSortOption: SortOption) {
+    val selectedSortLabel = stringArrayResource(id = R.array.sorting_options_label)[selectedSortOption.ordinal]
     Column(modifier = Modifier
         .clickable { }
         .padding(16.dp)) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Text(text = restaurant.name, style = MaterialTheme.typography.body2)
-            Text(text = restaurant.status, style = MaterialTheme.typography.body2)
+            Text(text = restaurant.status.uppercase(), style = MaterialTheme.typography.body2)
         }
         Text(
-            text = "$selectedSortValue : ${restaurant.getSortingValue(selectedSortValue)}",
+            text = "$selectedSortLabel : ${restaurant.getSortingValue(selectedSortOption)}",
             modifier = Modifier.padding(top = 8.dp),
             style = MaterialTheme.typography.caption
         )

@@ -6,7 +6,7 @@ import com.example.restaurant_impl.ComposeUiEvent
 import com.example.restaurant_impl.domain.GetRestaurantsList
 import com.example.restaurant_impl.ui.RestaurantNavigation
 import com.example.restaurant_impl.ui.viewstates.RestaurantListViewState
-import com.jet.database.model.enums.SortValue
+import com.jet.database.model.enums.SortOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,6 +58,7 @@ class RestaurantListViewModel @Inject constructor(
     private fun onClearSearchQuery() {
         viewModelScope.launch {
             state.value = state.value.copy(searchQuery = "")
+            getRestaurants()
         }
     }
 
@@ -65,7 +66,7 @@ class RestaurantListViewModel @Inject constructor(
         navigateTo { RestaurantNavigation.SortOptionDialog }
     }
 
-    private fun onSortOptionSelected(sortOption: SortValue) {
+    private fun onSortOptionSelected(sortOption: SortOption) {
         state.value = state.value.copy(currentSortingValue = sortOption)
         getRestaurants()
     }
@@ -74,6 +75,6 @@ class RestaurantListViewModel @Inject constructor(
         data class SearchQueryChanged(val query: String) : RestaurantsEvent()
         object ClearSearchQuery : RestaurantsEvent()
         object SortOptionClicked : RestaurantsEvent()
-        data class SortOptionSelected(val selectedSortOption: SortValue): RestaurantsEvent()
+        data class SortOptionSelected(val selectedSortOption: SortOption): RestaurantsEvent()
     }
 }
