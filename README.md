@@ -10,10 +10,7 @@ This project is done as [Assignment](readme/assignment.docx) for Senior Android 
 
 ## Screenshots
 
-<img src="readme/distance.png" />
-<img src="readme/sort.png" />
-<img src="readme/list_simple.png" />
-<img src="readme/search.png" />
+<img src="readme/distance.png" width="200" /> <img src="readme/sort.png" width="200" /> <img src="readme/list_simple.png" width="200" /> <img src="readme/search.png" width="200" />
 
 ## Feature and Functionality
 Following are the basic functionalities that were required and have been implemented
