@@ -1,10 +1,12 @@
-package com.example.restaurant_impl.ui
+package com.example.restaurant_impl
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.example.restaurant_impl.ui.RestaurantNavigation
 import dagger.hilt.android.AndroidEntryPoint
+//TODO: REMOVE THIS ACTIVITY FROM "MAIN"
 
 // The only purpose of this Activity is to be used for UI Testing
 // Generally for functionality we are using only one MainActivity

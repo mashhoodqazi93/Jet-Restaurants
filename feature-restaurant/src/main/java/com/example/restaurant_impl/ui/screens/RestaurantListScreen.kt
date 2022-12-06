@@ -1,43 +1,25 @@
 package com.example.restaurant_impl.ui.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.rotary.onPreRotaryScrollEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -45,12 +27,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.restaurant_impl.NavigationCommand
 import com.example.restaurant_impl.R
 import com.example.restaurant_impl.ui.RestaurantNavigation
+import com.example.restaurant_impl.ui.components.RestaurantListItem
+import com.example.restaurant_impl.ui.components.SimpleTextField
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel
 import com.example.restaurant_impl.ui.viewmodels.RestaurantListViewModel.RestaurantsEvent
 import com.jet.database.entities.Restaurant
 import com.jet.database.model.enums.SortOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
+//TODO: Remove Unused imports
+
 
 @Composable
 fun RestaurantListScreen() {
@@ -59,8 +46,9 @@ fun RestaurantListScreen() {
     RestaurantListUi(viewModel, nav)
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
+//TODO: Remove Lint Error suppression
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterialApi::class)
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<NavigationCommand>) {
     val stateFlow = viewModel.state.collectAsStateWithLifecycle()
@@ -78,16 +66,32 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
             bottomSheetState.show()
         }
     }
-    coroutineScope.launch {
-        navigation.collect { nav ->
+
+    //TODO: Remove Coroutine on Recomposition and remove suppression so that coroutine is not launched on every recomposition
+
+    /* coroutineScope.launch {
+]        navigation.collect { nav ->
             when (nav) {
                 is RestaurantNavigation.SortOptionDialog -> {
                     openBottomSheet()
                 }
             }
         }
-    }
+    }*/
 
+    LaunchedEffect(key1 = viewModel.navigation, block = {
+        coroutineScope.launch {
+            navigation.collect { nav ->
+                when (nav) {
+                    is RestaurantNavigation.SortOptionDialog -> {
+                        openBottomSheet()
+                    }
+                }
+            }
+        }
+    })
+
+//TODO: Remove extra empty lines. Integrate tools like Spotless to make this mandatory before committing
 
 
 
@@ -199,8 +203,8 @@ private fun RestaurantList(restaurants: List<Restaurant>, selectedSortValue: Sor
         }
     }
 }
-
-@Composable
+//TODO: Move RestaurantListItem into separate file
+/*@Composable
 private fun RestaurantListItem(restaurant: Restaurant, selectedSortOption: SortOption) {
     val selectedSortLabel =
         stringArrayResource(id = R.array.sorting_options_label)[selectedSortOption.ordinal]
@@ -221,9 +225,9 @@ private fun RestaurantListItem(restaurant: Restaurant, selectedSortOption: SortO
         }
     }
     Divider(thickness = 1.dp)
-}
-
-@Composable
+}*/
+//TODO: Move SimpleTextField into separate file
+/*@Composable
 fun SimpleTextField(
     value: String,
     onValueChange: (String) -> Unit,
@@ -271,4 +275,4 @@ fun SimpleTextField(
                 if (trailingIcon != null) trailingIcon()
             }
         })
-}
+}*/
