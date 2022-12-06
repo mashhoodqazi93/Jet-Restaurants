@@ -1,6 +1,5 @@
 package com.example.restaurant_impl.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -45,10 +44,10 @@ fun RestaurantListScreen() {
     val nav = viewModel.navigation
     RestaurantListUi(viewModel, nav)
 }
-
-//TODO: Remove Lint Error suppression
+//TODO: Remove OptIn warning
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterialApi::class)
-@SuppressLint("CoroutineCreationDuringComposition")
+//TODO: Remove Lint Error suppression
+//@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<NavigationCommand>) {
     val stateFlow = viewModel.state.collectAsStateWithLifecycle()
