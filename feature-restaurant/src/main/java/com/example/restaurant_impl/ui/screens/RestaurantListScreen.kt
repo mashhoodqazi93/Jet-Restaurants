@@ -78,7 +78,7 @@ fun RestaurantListUi(viewModel: RestaurantListViewModel, navigation: Flow<Naviga
         }
     }*/
 
-    LaunchedEffect(key1 = viewModel.navigation, block = {
+    LaunchedEffect(key1 = Unit, block = {
         coroutineScope.launch {
             navigation.collect { nav ->
                 when (nav) {
