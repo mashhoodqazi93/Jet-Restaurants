@@ -1,7 +1,7 @@
 
 # JET Restaurants
 
-This project is done as [Assignment](readme/assignment.docx) for Senior Android Engineer position at Just Eat Takeaway.com.
+This project demostrates loading data from database and showing in a list using Compose, Room DB, Hilt and Kotlin.
 
 ## Authors
 
